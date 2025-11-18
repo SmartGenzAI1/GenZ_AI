@@ -2,42 +2,44 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from config import settings
-from database import init_db
 
-# Routers
 from routes.auth import router as auth_router
-from routes.conversation import router as conversation_router
-from routes.message import router as message_router
-from routes.memory import router as memory_router
 from routes.chat import router as chat_router
+from routes.conversation import router as conversation_router
+from routes.search import router as search_router
 
 app = FastAPI(
     title="GenZ AI Backend",
     version="1.0.0",
-    description="Backend services for GenZ AI - Multi-model AI assistant"
 )
 
-# CORS
+# -------- CORS SETUP --------
+
+# Both localhost and production preview (optional)
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:4173",   # Svelte preview
+    "http://127.0.0.1:4173"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.on_event("startup")
-async def startup():
-    await init_db()
+# -------- ROUTES --------
 
-@app.get("/")
-async def root():
-    return {"message": "GenZ AI Backend Running", "location": "Kashmir 🇮🇳"}
+app.include_router(auth_router, prefix="/auth")
+app.include_router(chat_router, prefix="/chat")
+app.include_router(conversation_router, prefix="/conversations")
+app.include_router(search_router, prefix="/search")
 
-# Register routes
-app.include_router(auth_router)
-app.include_router(conversation_router)
-app.include_router(message_router)
-app.include_router(memory_router)
-app.include_router(chat_router)
+# -------- HEALTH CHECK --------
+
+@app.get("/ping")
+async def ping():
+    return {"status": "ok", "message": "GenZ AI backend is online."}
