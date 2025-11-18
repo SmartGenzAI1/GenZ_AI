@@ -5,7 +5,10 @@
   export let onSend;
 
   function send() {
-    if (message.trim().length > 0) onSend(message);
+    if (message.trim() !== "") {
+      onSend(message);
+      message = "";
+    }
   }
 </script>
 
@@ -14,12 +17,10 @@
     type="text"
     bind:value={message}
     placeholder="Type something…"
-    on:keydown={(e) => e.key === 'Enter' && send()}
+    on:keydown={(e) => e.key === "Enter" && send()}
   />
 
-  <button class="send" on:click={send}>
-    ➤
-  </button>
+  <button class="send" on:click={send}>➤</button>
 </div>
 
 <style>
@@ -29,6 +30,11 @@
     padding: 8px 12px;
     border-radius: 16px;
     margin: 12px;
+    transition: 0.25s ease;
+  }
+
+  .input-box:focus-within {
+    background: rgba(255, 255, 255, 0.65);
   }
 
   input {
@@ -44,8 +50,13 @@
     background: var(--accent);
     color: white;
     border: none;
-    padding: 8px 14px;
-    border-radius: 10px;
+    padding: 9px 16px;
+    border-radius: 12px;
     cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .send:hover {
+    transform: scale(1.1);
   }
 </style>
