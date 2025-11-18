@@ -5,6 +5,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import settings
 from database import init_db
 
+# Routers
+from routes.auth import router as auth_router
+from routes.conversation import router as conversation_router
+from routes.message import router as message_router
+
 app = FastAPI(
     title="GenZ AI Backend",
     version="1.0.0",
@@ -14,7 +19,7 @@ app = FastAPI(
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,7 +30,12 @@ app.add_middleware(
 async def startup():
     await init_db()
 
-# Root endpoint
+# Root
 @app.get("/")
 async def root():
     return {"message": "GenZ AI Backend Running", "location": "Kashmir 🇮🇳"}
+
+# Include routes
+app.include_router(auth_router)
+app.include_router(conversation_router)
+app.include_router(message_router)
