@@ -1,0 +1,26 @@
+/* frontend/src/app.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #F5F7FA;
+  --text: #1D3557;
+  --accent: #D46A32;
+  --pine: #0B3C2F;
+  --mist: #DADDE2;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+.frosted {
+  backdrop-filter: blur(12px) saturate(150%);
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
+}
