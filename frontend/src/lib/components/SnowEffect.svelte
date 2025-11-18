@@ -1,7 +1,6 @@
 <!-- frontend/src/lib/components/SnowEffect.svelte -->
-
 <script>
-  let snowflakes = Array.from({ length: 40 });
+  // No JS needed — all optimized CSS animations
 </script>
 
 <style>
@@ -9,37 +8,40 @@
     position: fixed;
     top: 0;
     left: 0;
-    pointer-events: none;
     width: 100%;
     height: 100%;
+    pointer-events: none;
     overflow: hidden;
-  }
-  .flake {
-    position: absolute;
-    top: -10px;
-    background: white;
-    width: 6px;
-    height: 6px;
-    opacity: 0.7;
-    border-radius: 50%;
-    animation: fall linear infinite;
+    z-index: 0;
   }
 
-  @keyframes fall {
-    0% { transform: translateY(-10px); }
-    100% { transform: translateY(110vh); }
+  .snow::before, 
+  .snow::after {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: 0;
+    left: 0;
+
+    /* dot pattern */
+    background-image: radial-gradient(white 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.45;
+
+    animation: snowFall 12s linear infinite;
+  }
+
+  .snow::after {
+    opacity: 0.25;
+    animation-duration: 18s;
+  }
+
+  @keyframes snowFall {
+    to {
+      transform: translateY(20%);
+    }
   }
 </style>
 
-<div class="snow">
-  {#each snowflakes as _, i}
-    <div
-      class="flake"
-      style="
-        left: {Math.random() * 100}%;
-        animation-duration: {5 + Math.random() * 8}s;
-        animation-delay: {Math.random() * 5}s;
-      "
-    />
-  {/each}
-</div>
+<div class="snow"></div>
