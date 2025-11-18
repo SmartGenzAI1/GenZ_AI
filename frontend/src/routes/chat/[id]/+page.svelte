@@ -1,5 +1,4 @@
 <!-- frontend/src/routes/chat/[id]/+page.svelte -->
-
 <script>
   import { api } from "$lib/api.js";
   import MessageBubble from "$lib/components/MessageBubble.svelte";
@@ -16,6 +15,8 @@
 
   let token = localStorage.getItem("token") || "";
 
+  let messagesContainer;
+
   async function loadConversations() {
     conversations = (await api("/conversations?token=" + token)).conversations;
   }
@@ -25,8 +26,7 @@
   }
 
   async function send(msg) {
-    message = "";
-    const data = await api("/chat?token=" + token, "POST", {
+    await api("/chat?token=" + token, "POST", {
       conversation_id: params.id,
       user_message: msg,
       model
@@ -37,20 +37,24 @@
 
   loadConversations();
   loadMessages();
+
+  // Auto-scroll chat
+  $: if (messagesContainer) {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
 </script>
 
 <div class="layout">
   <Sidebar {conversations} active={params.id} />
 
   <main>
-    <div class="messages">
+    <div class="messages" bind:this={messagesContainer}>
       {#each messages as m}
         <MessageBubble role={m.role} content={m.content} />
       {/each}
     </div>
 
     <ModelSelector bind:model />
-
     <ChatInput bind:message onSend={send} />
   </main>
 </div>
@@ -73,5 +77,16 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
+    gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .layout {
+      flex-direction: column;
+    }
+
+    .messages {
+      padding: 12px;
+    }
   }
 </style>
