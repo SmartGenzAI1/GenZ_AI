@@ -1,11 +1,15 @@
 <!-- frontend/src/lib/components/MessageBubble.svelte -->
-
 <script>
+  import { fade, fly } from "svelte/transition";
   export let role;
   export let content;
 </script>
 
-<div class="bubble {role}">
+<div
+  class="bubble {role}"
+  transition:fade={{ duration: 180 }}
+  transition:fly={{ y: 8, duration: 200 }}
+>
   {@html content}
 </div>
 
@@ -21,7 +25,8 @@
   }
 
   .assistant {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--text);
     align-self: flex-start;
   }
 
