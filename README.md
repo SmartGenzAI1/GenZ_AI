@@ -16,7 +16,7 @@ Copy–paste directly into your GitHub repo.
 
 ---
 
-# <p align="center">Developed by <b>Aaqib</b></p>
+# <p align="center">Developed by <b>Owais Ahmad Dar</b></p>
 
 ---
 
@@ -375,7 +375,7 @@ Yes — CockroachDB + custom memory engine.
 
 **Developed by:**
 
-# ⭐ **Aaqib**
+# ⭐ **Owais Ahmad Dar**
 
 Proudly from Kashmir 🇮🇳
 
