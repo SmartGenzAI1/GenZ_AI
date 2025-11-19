@@ -1,4 +1,4 @@
- `README.md`**
+ `README.md`
 
 ### (Logo + Badges + Mermaid + ASCII Diagrams + API Docs + Deployment + CI/CD + FAQ + EVERYTHING)
 
