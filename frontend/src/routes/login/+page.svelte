@@ -1,136 +1,164 @@
 <script>
-  import { loginUser } from '$lib/api/auth';
-  import { setAuth } from '$lib/stores/auth';
   import { goto } from '$app/navigation';
+  import { setAuth } from '$lib/stores/auth';
 
   let email = '';
-  let username = '';
   let password = '';
+  let loading = false;
   let error = '';
+
+  async function handleLogin() {
+    error = '';
+    loading = true;
+
+    try {
+      const res = await fetch('http://localhost:8000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        error = data.detail || 'Login failed';
+        loading = false;
+        return;
+      }
+
+      setAuth(data.access_token);
+      document.cookie = `token=${data.access_token}; path=/; max-age=604800`;
+      goto('/chat');
+    } catch (err) {
+      error = 'Network error';
+    }
+
+    loading = false;
+  }
 </script>
 
-<div class="auth-container">
-  <div class="auth-card">
-    <h1 class="title">Welcome Back</h1>
-    <p class="subtitle">Login to continue ❄️</p>
+<div class="container">
+  <div class="card">
+    <h1>Welcome Back</h1>
+    <p class="subtitle">Sign in to continue</p>
 
     {#if error}
-    <div class="error-box">{error}</div>
+      <div class="error">{error}</div>
     {/if}
 
-    <input class="input" bind:value={email} placeholder="Email" />
-    <input class="input" bind:value={username} placeholder="Username (optional)" />
-    <input class="input" type="password" bind:value={password} placeholder="Password" />
+    <input type="email" placeholder="Email" bind:value={email} />
+    <input type="password" placeholder="Password" bind:value={password} />
 
-    <button class="btn" on:click={handleLogin}>Login</button>
+    <button class="login-btn" on:click={handleLogin} disabled={loading}>
+      {loading ? 'Logging in...' : 'Login'}
+    </button>
 
-    <div class="oauth-row">
-      <div class="oauth-btn google">G</div>
-      <div class="oauth-btn github">GH</div>
-      <div class="oauth-btn facebook">F</div>
+    <div class="divider">or continue with</div>
+
+    <div class="oauth-box">
+      <button class="oauth google">G</button>
+      <button class="oauth github">GH</button>
+      <button class="oauth facebook">F</button>
     </div>
 
-    <p class="switch">
-      New here?
-      <a href="/register">Create an account</a>
-    </p>
+    <div class="register">Don't have an account? <a href="/register">Sign up</a></div>
   </div>
 </div>
 
 <style>
-  .auth-container {
-    min-height: 100vh;
+  .container {
+    width: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: transparent;
+    background: radial-gradient(circle at top, #ffffff33, #00000055);
+    backdrop-filter: blur(10px);
   }
 
-  .auth-card {
-    width: 360px;
-    padding: 28px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(14px);
+  .card {
+    width: 350px;
+    padding: 30px;
+    background: rgba(255,255,255,0.07);
     border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 18px;
+    backdrop-filter: blur(20px);
     text-align: center;
+    color: white;
   }
 
-  .title {
-    font-size: 28px;
-    margin-bottom: 6px;
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
   }
 
   .subtitle {
     opacity: 0.8;
-    font-size: 14px;
     margin-bottom: 20px;
   }
 
-  .input {
+  input {
     width: 100%;
-    padding: 12px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.05);
-    margin-bottom: 12px;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.1);
     color: white;
   }
 
-  .btn {
+  .login-btn {
     width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    background: #7fc7ff;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .error-box {
-    background: rgba(255,0,0,0.3);
-    padding: 8px;
-    margin-bottom: 14px;
-    border-radius: 10px;
-  }
-
-  .oauth-row {
     margin-top: 18px;
-    display: flex;
-    justify-content: center;
-    gap: 14px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(0,150,255,0.5);
+    border: 1px solid rgba(0,150,255,0.7);
+    color: white;
   }
 
-  .oauth-btn {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  .switch {
-    margin-top: 12px;
+  .divider {
+    margin: 18px 0 10px 0;
     opacity: 0.8;
+    font-size: 0.9rem;
+  }
+
+  .oauth-box {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .oauth {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    font-size: 1.1rem;
+    color: white;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .oauth:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
+  .register {
+    font-size: 0.9rem;
+    margin-top: 8px;
+  }
+
+  .register a {
+    color: #66ccff;
+  }
+
+  .error {
+    margin-bottom: 10px;
+    padding: 8px;
+    background: rgba(255,0,0,0.3);
+    border: 1px solid rgba(255,0,0,0.5);
+    border-radius: 8px;
   }
 </style>
-
-<script>
-  async function handleLogin() {
-    error = '';
-
-    const res = await loginUser({ email, username, password });
-
-    if (res.error) {
-      error = res.error;
-      return;
-    }
-
-    setAuth(res.access_token, res.user);
-    goto('/chat');
-  }
-</script>
