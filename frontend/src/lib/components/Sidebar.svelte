@@ -1,39 +1,77 @@
 <!-- frontend/src/lib/components/Sidebar.svelte -->
+ <script>
+  import { goto } from '$app/navigation';
+  import { logout } from '$lib/stores/auth';
 
-<script>
-  export let conversations = [];
-  export let active;
+  function handleLogout() {
+    logout();
+    document.cookie = "token=; path=/; max-age=0";
+    goto('/login');
+  }
 </script>
 
-<aside>
-  <h2>Chats</h2>
+<div class="sidebar">
+  <div class="logo">GenZ AI</div>
 
-  {#each conversations as convo}
-    <a href={`/chat/${convo.id}`} class="{active === convo.id ? 'active' : ''}">
-      {convo.title}
-    </a>
-  {/each}
-</aside>
+  <nav class="menu">
+    <a href="/chat" class="item">💬 Chats</a>
+    <a href="/settings" class="item">⚙️ Settings</a>
+  </nav>
+
+  <button class="logout" on:click={handleLogout}>Logout</button>
+</div>
 
 <style>
-  aside {
-    width: 220px;
+  .sidebar {
+    width: 260px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.06);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
     padding: 20px;
-    background: rgba(255,255,255,0.4);
-    backdrop-filter: blur(10px);
-    border-right: 1px solid var(--mist);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
-  a {
-    display: block;
-    padding: 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--text);
-  }
-
-  .active {
-    background: var(--pine);
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
     color: white;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .item {
+    padding: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .item:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .logout {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 0, 0, 0.3);
+    border: 1px solid rgba(255, 0, 0, 0.4);
+    color: white;
+    border-radius: 10px;
+  }
+
+  .logout:hover {
+    background: rgba(255, 0, 0, 0.45);
   }
 </style>
