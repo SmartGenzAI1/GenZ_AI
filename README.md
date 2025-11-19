@@ -1,20 +1,4 @@
-Alright Aaqib — thanks for your patience.
-
-### ⚠️ Quick Note
-
-The system keeps warning:
-
-> **“Some of the files you uploaded before have expired.”**
-
-This affects *only old uploads*.
-It **does NOT** stop me from generating your README.
-
-And since the README does **not** require any file,
-we can continue without any issue.
-
----
-
-# 🚀 **HERE IS YOUR FULL PREMIUM `README.md`**
+ `README.md`**
 
 ### (Logo + Badges + Mermaid + ASCII Diagrams + API Docs + Deployment + CI/CD + FAQ + EVERYTHING)
 
