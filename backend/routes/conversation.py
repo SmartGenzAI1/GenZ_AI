@@ -9,7 +9,7 @@ from models.conversation import Conversation
 from schemas.conversation_schemas import CreateConversationSchema, RenameConversationSchema
 from utils.jwt_handler import decode_token
 
-router = APIRouter(prefix="/conversations", tags=["Conversations"])
+router = APIRouter(tags=["Conversations"])  # FIXED: Removed prefix
 
 
 async def get_db():
