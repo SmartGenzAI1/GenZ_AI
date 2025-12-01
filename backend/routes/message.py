@@ -10,8 +10,7 @@ from models.conversation import Conversation
 from schemas.message_schemas import CreateMessageSchema
 from utils.jwt_handler import decode_token
 
-router = APIRouter(prefix="/messages", tags=["Messages"])
-
+router = APIRouter(tags=["Messages"])
 
 async def get_db():
     async with AsyncSessionLocal() as session:
