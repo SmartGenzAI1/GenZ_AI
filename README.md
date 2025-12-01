@@ -1,8 +1,5 @@
  `README.md`
 
-### (Logo + Badges + Mermaid + ASCII Diagrams + API Docs + Deployment + CI/CD + FAQ + EVERYTHING)
-
-Copy–paste directly into your GitHub repo.
 
 ---
 
