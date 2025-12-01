@@ -13,7 +13,7 @@ from services.memory_service import (
     delete_memory
 )
 
-router = APIRouter(prefix="/memory", tags=["Memory"])
+router = APIRouter(tags=["Memory"])
 
 async def get_db():
     async with AsyncSessionLocal() as session:
