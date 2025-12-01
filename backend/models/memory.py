@@ -1,6 +1,5 @@
 # backend/models/memory.py
-
-from sqlalchemy import Column, Text, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, Text, TIMESTAMP, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from database import Base
