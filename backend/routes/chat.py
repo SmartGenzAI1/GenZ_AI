@@ -13,7 +13,7 @@ from models.memory import Memory
 from services.model_router import route_model
 
 
-router = APIRouter(prefix="/chat", tags=["Chat"])
+router = APIRouter(tags=["Chat"])  # FIXED: Removed prefix
 
 
 async def get_db():
@@ -73,12 +73,12 @@ async def chat(req: ChatRequest, token: str, db: AsyncSession = Depends(get_db))
     reasoning_tag = ""
     if req.reasoning_mode:
         reasoning_tag = (
-            "\n\n[REASONING MODE ENABLED — show chain-of-thought internally but do NOT reveal it]"
+            "\n\n[REASONING MODE ENABLED – show chain-of-thought internally but do NOT reveal it]"
         )
 
     # build system prompt
     final_prompt = f"""
-You are GenZ AI — Fast, Smart, Calm on the Eyes.
+You are GenZ AI – Fast, Smart, Calm on the Eyes.
 
 User Message:
 {req.user_message}
