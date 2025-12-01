@@ -7,7 +7,7 @@ from routes.auth import router as auth_router
 from routes.chat import router as chat_router
 from routes.conversation import router as conversation_router
 from routes.search import router as search_router
-
+from database import init_db
 app = FastAPI(
     title="GenZ AI Backend",
     version="1.0.0",
@@ -43,3 +43,9 @@ app.include_router(search_router, prefix="/search")
 @app.get("/ping")
 async def ping():
     return {"status": "ok", "message": "GenZ AI backend is online."}
+
+
+@app.on_event("startup")
+async def startup_event():
+    await init_db()
+    print("✅ Database initialized!")
