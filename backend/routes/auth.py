@@ -11,7 +11,7 @@ from database import AsyncSessionLocal
 from models.user import User
 from models.session import Session
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(tags=["Authentication"])  # FIXED: Removed prefix
 
 async def get_db():
     async with AsyncSessionLocal() as session:
