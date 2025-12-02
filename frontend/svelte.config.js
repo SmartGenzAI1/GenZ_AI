@@ -1,8 +1,12 @@
-import adapter from '@sveltejs/adapter-node';
+import adapter from '@sveltejs/adapter-static';
+import { vitePreprocess } from '@sveltejs/kit/vite';
 
 export default {
+  preprocess: vitePreprocess(),
   kit: {
     adapter: adapter(),
-    outDir: 'build'
+    paths: {
+      base: ''
+    }
   }
 };
