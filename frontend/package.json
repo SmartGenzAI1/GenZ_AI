@@ -4,9 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview"
+  "dev": "svelte-kit dev",
+  "build": "svelte-kit build",
+  "preview": "svelte-kit preview"
+}
+
   },
   "dependencies": {
     "axios": "^1.6.7",
