@@ -5,23 +5,22 @@
   export let content;
 </script>
 
-<div
-  class="bubble {role}"
-  transition:fade={{ duration: 180 }}
-  transition:fly={{ y: 8, duration: 200 }}
->
-  {@html content}
+<div transition:fade={{ duration: 180 }}>
+  <div
+    class="bubble {role}"
+    transition:fly={{ y: 8, duration: 200 }}
+  >
+    {@html content}
+  </div>
 </div>
 
 <style>
   .bubble {
     max-width: 80%;
     padding: 12px 16px;
-    margin: 10px 0;
-    border-radius: 14px;
-    font-size: 15px;
-    line-height: 1.5;
-    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    backdrop-filter: blur(4px);
   }
 
   .assistant {
