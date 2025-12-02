@@ -1,0 +1,13 @@
+import { sveltekit } from '@sveltejs/kit/vite';
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  kit: {
+    adapter: undefined
+  },
+  vitePlugin: {
+    inspector: true
+  }
+};
+
+export default config;
