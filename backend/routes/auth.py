@@ -1,21 +1,16 @@
 # backend/routes/auth.py
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select
 
 from schemas.auth_schemas import RegisterSchema, LoginSchema, TokenResponse
 from utils.hashing import hash_password, verify_password
 from utils.jwt_handler import create_access_token, create_refresh_token
-from database import AsyncSessionLocal
+from database import get_db
 from models.user import User
 from models.session import Session
 
-router = APIRouter(tags=["Authentication"])  # FIXED: Removed prefix
-
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        yield session
+router = APIRouter(tags=["Authentication"])
 
 
 @router.post("/register", response_model=TokenResponse)
@@ -58,11 +53,9 @@ async def login_user(data: LoginSchema, db: AsyncSession = Depends(get_db)):
     if not user or not verify_password(data.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    # Create tokens
     access = create_access_token({"user_id": str(user.id)})
     refresh = create_refresh_token({"user_id": str(user.id)})
 
-    # Store new session
     session = Session(user_id=user.id, refresh_token=refresh)
     db.add(session)
     await db.commit()
@@ -72,7 +65,6 @@ async def login_user(data: LoginSchema, db: AsyncSession = Depends(get_db)):
 
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh_token(refresh_token: str, db: AsyncSession = Depends(get_db)):
-    # Validate refresh token
     query = await db.execute(select(Session).where(Session.refresh_token == refresh_token))
     session = query.scalars().first()
 
@@ -84,7 +76,6 @@ async def refresh_token(refresh_token: str, db: AsyncSession = Depends(get_db)):
     new_access = create_access_token({"user_id": user_id})
     new_refresh = create_refresh_token({"user_id": user_id})
 
-    # Update token in DB
     session.refresh_token = new_refresh
     await db.commit()
 
