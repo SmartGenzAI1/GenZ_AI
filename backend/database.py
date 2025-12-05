@@ -1,21 +1,28 @@
 # backend/database.py
-from sqlalchemy.ext.asyncio import create_async_engine
-import ssl
+# database.py
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import declarative_base
 import os
 
-DB_URL = os.getenv("DATABASE_URL")
-
-# Create SSL context (future-proof)
-ssl_context = ssl.create_default_context()
-ssl_context.check_hostname = False
-ssl_context.verify_mode = ssl.CERT_NONE
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_async_engine(
-    DB_URL.replace("postgres://", "postgresql+asyncpg://"),
-    connect_args={"ssl": ssl_context},  # <-- FIXED & FUTURE-PROOF
+    DATABASE_URL,
+    echo=False,
+    future=True,
 )
 
-async def init_db():
-    async with engine.begin() as conn:
-        # Create tables if needed
-        await conn.run_sync(Base.metadata.create_all)
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
+
+Base = declarative_base()
+
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
