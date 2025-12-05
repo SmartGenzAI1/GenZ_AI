@@ -3,7 +3,8 @@
 import httpx
 import json
 from config import settings
-from services.model_router import call_groq
+
+from services.model_driver import call_groq   # <--- FIXED! SAFE IMPORT
 
 
 SEARCH_API_URL = "https://google.serper.dev/search"
@@ -12,7 +13,7 @@ SEARCH_API_URL = "https://google.serper.dev/search"
 async def web_search(query: str):
     headers = {
         "X-API-KEY": settings.SEARCH_API_KEY,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
 
     body = {"q": query}
@@ -24,11 +25,11 @@ async def web_search(query: str):
     results = []
 
     if "organic" in data:
-        for item in data["organic"][:5]:  # top 5 results
+        for item in data["organic"][:5]:
             results.append({
                 "title": item.get("title", ""),
                 "snippet": item.get("snippet", ""),
-                "link": item.get("link", "")
+                "link": item.get("link", ""),
             })
 
     return results
@@ -42,10 +43,6 @@ def format_citations(results):
 
 
 async def synthesize_answer(query: str, results):
-    """
-    Use Groq LLaMA3 or other fast LLM to synthesize answer
-    """
-
     context = "\n\n".join(
         f"Title: {r['title']}\nSnippet: {r['snippet']}\nURL: {r['link']}"
         for r in results
@@ -84,8 +81,8 @@ async def run_search_query(query: str):
 
     final_output = (
         f"{answer}\n\n"
-        f"---\n"
-        f"### Sources\n"
+        "---\n"
+        "### Sources\n"
         f"{citations}"
     )
 
